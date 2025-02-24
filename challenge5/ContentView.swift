@@ -7,7 +7,6 @@ struct ContentView: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 20) {
-            // Header
             HStack {
                 VStack(alignment: .leading) {
                     Text(currentDateFormatted())
@@ -20,7 +19,6 @@ struct ContentView: View {
                 }
                 Spacer()
                 Button(action: {
-                    // Action for settings
                 }) {
                     Image(systemName: "gearshape.fill")
                         .resizable()
@@ -30,11 +28,10 @@ struct ContentView: View {
             }
             .padding(.horizontal)
             
-            // Cards List
             ScrollView {
                 VStack(spacing: 15) {
-                    SessionCardView(title: "Guided Session", subtitle: "4 MIN", icon: "hand.tap")
-                    SessionCardView(title: "Your Session", subtitle: "PERSONALIZED", icon: "hand.wave")
+                    SessionCardView(title: "Guided Session", subtitle: "4 MIN", icon: "hand.tap.fill")
+                    SessionCardView(title: "Your Session", subtitle: "PERSONALIZED", icon: "hands.sparkles.fill")
                 }
                 .padding(.horizontal)
             }
@@ -71,8 +68,8 @@ struct SessionCardView: View {
                 Image(systemName: icon)
                     .resizable()
                     .scaledToFit()
-                    .frame(height: 40)
-                    .foregroundColor(.yellow)
+                    .frame(height: 50)
+                    .foregroundColor(.accent1)
                     .padding(.top)
                 
                 Text(title)
@@ -82,9 +79,9 @@ struct SessionCardView: View {
                 
                 HStack {
                     Image(systemName: "clock")
-                        .foregroundColor(.yellow)
+                        .foregroundColor(.accent1)
                     Text(subtitle)
-                        .foregroundColor(.yellow)
+                        .foregroundColor(.accent1)
                         .font(.subheadline)
                 }
                 .multilineTextAlignment(.center)
@@ -100,17 +97,15 @@ struct SessionCardView: View {
             .background(Color(.systemGray6))
             .cornerRadius(15)
             
-            // Three dots button styled as in the image
             Button(action: {
-                // Action for more options
             }) {
                 Circle()
-                    .fill(Color(.yellow))
+                    .fill(Color(.accent1))
                     .opacity(15/100)
                     .frame(width: 30, height: 30)
                     .overlay(
                         Image(systemName: "ellipsis")
-                            .foregroundColor(.yellow)
+                            .foregroundColor(.accent1)
                     )
                     .padding(10)
             }
