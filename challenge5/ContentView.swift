@@ -1,57 +1,100 @@
-//
-//  ContentView.swift
-//  challenge5
-//
-//  Created by Francesca Finetti on 24/02/25.
-//
-
 import SwiftUI
 import SwiftData
 
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
     @Query private var items: [Item]
-
+    
     var body: some View {
-        NavigationSplitView {
-            List {
-                ForEach(items) { item in
-                    NavigationLink {
-                        Text("Item at \(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))")
-                    } label: {
-                        Text(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))
-                    }
+        VStack(alignment: .leading, spacing: 20) {
+            HStack {
+                VStack(alignment: .leading) {
+                    Text(Date().formatted(date: .long, time: .omitted).uppercased())
+                        .font(.caption)
+                        .foregroundColor(.gray)
+                    Text("Hello, User")
+                        .font(.largeTitle)
+                        .bold()
+                        .foregroundColor(.primary)
                 }
-                .onDelete(perform: deleteItems)
+                Spacer()
+                Button(action: {
+                }) {
+                    Image(systemName: "gearshape.fill")
+                        .resizable()
+                        .frame(width: 24, height: 24)
+                        .foregroundColor(.primary)
+                }
             }
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    EditButton()
+            .padding(.horizontal)
+            
+            ScrollView {
+                VStack(spacing: 15) {
+                    SessionCardView(title: "Guided Session", subtitle: "4 MIN", icon: "hand.tap")
+                    SessionCardView(title: "Your Session", subtitle: "PERSONALIZED", icon: "hand.wave")
                 }
-                ToolbarItem {
-                    Button(action: addItem) {
-                        Label("Add Item", systemImage: "plus")
-                    }
-                }
+                .padding(.horizontal)
             }
-        } detail: {
-            Text("Select an item")
+            
+            Spacer()
+        }
+        .onAppear(perform: addItemIfEmpty)
+    }
+    
+    private func addItemIfEmpty() {
+        if items.isEmpty {
+            withAnimation {
+                let newItem = Item(timestamp: Date())
+                modelContext.insert(newItem)
+            }
         }
     }
+}
 
-    private func addItem() {
-        withAnimation {
-            let newItem = Item(timestamp: Date())
-            modelContext.insert(newItem)
-        }
-    }
-
-    private func deleteItems(offsets: IndexSet) {
-        withAnimation {
-            for index in offsets {
-                modelContext.delete(items[index])
+struct SessionCardView: View {
+    var title: String
+    var subtitle: String
+    var icon: String
+    
+    var body: some View {
+        VStack(alignment: .center, spacing: 10) {
+            Image(systemName: icon)
+                .resizable()
+                .scaledToFit()
+                .frame(height: 40)
+                .foregroundColor(.yellow)
+                .padding(.top)
+            
+            Text(title)
+                .font(.headline)
+                .foregroundColor(.primary)
+                .multilineTextAlignment(.center)
+            
+            HStack {
+                Image(systemName: "clock")
+                    .foregroundColor(.yellow)
+                Text(subtitle)
+                    .foregroundColor(.yellow)
+                    .font(.subheadline)
+            }
+            .multilineTextAlignment(.center)
+            
+            Text("Lorem Ipsum Is Simply Dummy Text Of The Printing And Typesetting Industry.")
+                .font(.footnote)
+                .foregroundColor(.gray)
+                .multilineTextAlignment(.center)
+                .lineLimit(3)
+                .padding(.bottom)
+            
+            HStack {
+                Spacer()
+                Image(systemName: "ellipsis")
+                    .foregroundColor(.primary)
             }
         }
+        .padding()
+        .background(Color(.systemGray6))
+        .cornerRadius(15)
     }
 }
 
