@@ -7,10 +7,11 @@ struct ContentView: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 20) {
+            // Header
             HStack {
                 VStack(alignment: .leading) {
-                    Text(Date().formatted(date: .long, time: .omitted).uppercased())
-                        .font(.caption)
+                    Text(currentDateFormatted())
+                        .font(.subheadline)
                         .foregroundColor(.gray)
                     Text("Hello, User")
                         .font(.largeTitle)
@@ -19,6 +20,7 @@ struct ContentView: View {
                 }
                 Spacer()
                 Button(action: {
+                    // Action for settings
                 }) {
                     Image(systemName: "gearshape.fill")
                         .resizable()
@@ -28,6 +30,7 @@ struct ContentView: View {
             }
             .padding(.horizontal)
             
+            // Cards List
             ScrollView {
                 VStack(spacing: 15) {
                     SessionCardView(title: "Guided Session", subtitle: "4 MIN", icon: "hand.tap")
@@ -49,6 +52,12 @@ struct ContentView: View {
             }
         }
     }
+    
+    private func currentDateFormatted() -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "EEEE, d MMMM"
+        return formatter.string(from: Date()).capitalized
+    }
 }
 
 struct SessionCardView: View {
@@ -57,44 +66,55 @@ struct SessionCardView: View {
     var icon: String
     
     var body: some View {
-        VStack(alignment: .center, spacing: 10) {
-            Image(systemName: icon)
-                .resizable()
-                .scaledToFit()
-                .frame(height: 40)
-                .foregroundColor(.yellow)
-                .padding(.top)
-            
-            Text(title)
-                .font(.headline)
-                .foregroundColor(.primary)
-                .multilineTextAlignment(.center)
-            
-            HStack {
-                Image(systemName: "clock")
+        ZStack(alignment: .topTrailing) {
+            VStack(alignment: .center, spacing: 10) {
+                Image(systemName: icon)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(height: 40)
                     .foregroundColor(.yellow)
-                Text(subtitle)
-                    .foregroundColor(.yellow)
-                    .font(.subheadline)
-            }
-            .multilineTextAlignment(.center)
-            
-            Text("Lorem Ipsum Is Simply Dummy Text Of The Printing And Typesetting Industry.")
-                .font(.footnote)
-                .foregroundColor(.gray)
-                .multilineTextAlignment(.center)
-                .lineLimit(3)
-                .padding(.bottom)
-            
-            HStack {
-                Spacer()
-                Image(systemName: "ellipsis")
+                    .padding(.top)
+                
+                Text(title)
+                    .font(.headline)
                     .foregroundColor(.primary)
+                    .multilineTextAlignment(.center)
+                
+                HStack {
+                    Image(systemName: "clock")
+                        .foregroundColor(.yellow)
+                    Text(subtitle)
+                        .foregroundColor(.yellow)
+                        .font(.subheadline)
+                }
+                .multilineTextAlignment(.center)
+                
+                Text("Lorem Ipsum Is Simply Dummy Text Of The Printing And Typesetting Industry.")
+                    .font(.footnote)
+                    .foregroundColor(.gray)
+                    .multilineTextAlignment(.center)
+                    .lineLimit(3)
+                    .padding(.bottom)
+            }
+            .padding()
+            .background(Color(.systemGray6))
+            .cornerRadius(15)
+            
+            // Three dots button styled as in the image
+            Button(action: {
+                // Action for more options
+            }) {
+                Circle()
+                    .fill(Color(.yellow))
+                    .opacity(15/100)
+                    .frame(width: 30, height: 30)
+                    .overlay(
+                        Image(systemName: "ellipsis")
+                            .foregroundColor(.yellow)
+                    )
+                    .padding(10)
             }
         }
-        .padding()
-        .background(Color(.systemGray6))
-        .cornerRadius(15)
     }
 }
 
