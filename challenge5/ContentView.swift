@@ -5,6 +5,10 @@ struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
     @Query private var items: [Item]
     
+    @State private var isSettingsPresented = false
+    @AppStorage("username") private var username: String = "User"
+
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 20) {
             HStack {
@@ -12,15 +16,16 @@ struct ContentView: View {
                     Text(currentDateFormatted())
                         .font(.subheadline)
                         .foregroundColor(.gray)
-                    Text("Hello, User")
+                    Text("Hello, \(username)")
                         .font(.largeTitle)
                         .bold()
                         .foregroundColor(.primary)
                 }
                 Spacer()
                 Button(action: {
+                    isSettingsPresented.toggle()
                 }) {
-                    Image(systemName: "gearshape.fill")
+                    Image(systemName: "gear")
                         .resizable()
                         .frame(width: 24, height: 24)
                         .foregroundColor(.primary)
@@ -29,9 +34,9 @@ struct ContentView: View {
             .padding(.horizontal)
             
             ScrollView {
-                VStack(spacing: 15) {
+                VStack(spacing: 25) {
                     CardView(title: "Guided Session", subtitle: "4 MIN", icon: "hand.tap.fill")
-                    CardView(title: "Your Session", subtitle: "PERSONALIZED", icon: "hands.sparkles.fill")
+                    CardView(title: "Your Session", subtitle: "-", icon: "hands.sparkles.fill")
                 }
                 .padding(.horizontal)
             }
@@ -39,6 +44,9 @@ struct ContentView: View {
             Spacer()
         }
         .onAppear(perform: addItemIfEmpty)
+        .sheet(isPresented: $isSettingsPresented) {
+            SettingsView()
+        }
     }
     
     private func addItemIfEmpty() {
@@ -56,8 +64,6 @@ struct ContentView: View {
         return formatter.string(from: Date()).capitalized
     }
 }
-
-
 
 #Preview {
     ContentView()

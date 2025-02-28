@@ -15,34 +15,46 @@ struct CardView: View {
         
         var body: some View {
             ZStack(alignment: .topTrailing) {
-                VStack(alignment: .center, spacing: 10) {
-                    Image(systemName: icon)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(height: 50)
-                        .foregroundColor(.accent1)
-                        .padding(.top)
-                    
-                    Text(title)
-                        .font(.headline)
-                        .foregroundColor(.primary)
-                        .multilineTextAlignment(.center)
-                    
+                VStack(alignment: .leading, spacing: 25) {
+
                     HStack {
-                        Image(systemName: "clock")
+
+                        Image(systemName: icon)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(height: 45)
                             .foregroundColor(.accent1)
-                        Text(subtitle)
-                            .foregroundColor(.accent1)
-                            .font(.subheadline)
+                            .padding(.top)
+                            .padding(.leading, 15)
+                        
+                        
+                        VStack(alignment: .leading) {
+                            Text(title)
+                                .font(.title3)
+                                .fontWeight(.bold)
+                                .foregroundColor(.primary)
+                            .multilineTextAlignment(.center)
+                        
+                            HStack {
+                                Image(systemName: "clock.fill")
+                                    .foregroundColor(.accent1)
+                                Text(subtitle)
+                                    .fontWeight(.semibold)
+                                    .foregroundColor(.accent1)
+                                    .font(.subheadline)
+                                    
+                            }
+                        }
                     }
-                    .multilineTextAlignment(.center)
                     
-                    Text("Lorem Ipsum Is Simply Dummy Text Of The Printing And Typesetting Industry.")
+                    Text("Lorem Ipsum Is Simply Dummy Text Of The Printing And Typesetting Industry. Lorem Ipsum Is Simply Dummy Text Of The Printing And Typesetting Industry.")
                         .font(.footnote)
-                        .foregroundColor(.gray)
-                        .multilineTextAlignment(.center)
+                        .foregroundColor(.white)
+                        .multilineTextAlignment(.leading)
                         .lineLimit(3)
                         .padding(.bottom)
+                        .padding(.leading, 15)
+
                 }
                 .padding()
                 .background(Color(.systemGray6))
@@ -65,5 +77,5 @@ struct CardView: View {
 }
 
 #Preview {
-    CardView(title: "session", subtitle: "whdeiuhf", icon: "hand.tap.fill")
+    CardView(title: "example", subtitle: "MIN", icon: "hand.tap.fill")
 }
