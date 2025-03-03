@@ -1,32 +1,109 @@
-import SwiftUI
+import CoreHaptics
 
-let texts = [
-       "If you’d like, you can close your eyes and allow yourself to settle into this moment.",
-       "Let your body soften just a little… and take a gentle breath—no need to change anything, just noticing your inhale and exhale.",
-       "Now, bring awareness to your hands. Feel their warmth, their presence, the gentle contact with your body.",
-       "Perhaps you can imagine them as kind, caring hands—offering comfort, support, and understanding.",
-       "What would it be like to receive this touch with an open heart?",
-       "What if, just for a moment, you allowed yourself to be held in this gentle kindness, without resistance or hesitation?",
-       "You might even picture someone you love placing their hands there, offering the same warmth and care.",
-       "Or simply recognize that this gesture is coming from you—to you. A quiet offering of kindness, no expectations, no demands.",
-       "Can you let yourself receive this small act of care as you would accept a gift from a dear friend?",
-       "Can you allow yourself to be worthy of this moment, just as you are?",
-       "Picture yourself as someone truly deserving of compassion—because you are.",
-       "Just like every human being, you deserve care, understanding, and gentleness.",
-       "There is nothing you need to prove… nothing you need to earn. Right here, in this moment, you are enough.",
-       "What if, instead of judging yourself, you simply offered understanding?",
-       "What if, instead of pushing through, you allowed yourself to pause?",
-       "This small act of kindness is always available to you.",
-       "Whether you’re sitting quietly at home, in the middle of a busy day, or moving through the world… you can return to this gentle touch whenever you need a moment of support.",
-       "How does it feel to offer yourself this moment of comfort?",
-       "What do you notice in your body as you do? Is there warmth, a sense of ease—or maybe just the simple awareness of being here?",
-       "If it feels right, you can explore different forms of touch. A light, soothing hold. A gentle press. A slow movement of your hands as if offering reassurance.",
-       "What feels most comforting in this moment? And if something doesn’t feel quite right, can you give yourself permission to adjust or let it go?",
-       "There is nothing to force… nothing to fix… just a quiet moment of connection with yourself.",
-       "A moment of allowing… a moment of being.",
-       "What would it be like to carry this sense of care with you throughout the day?",
-       "To return to it when you need a reminder that you are not alone, that you are worthy of kindness?",
-       "Let yourself rest in this space, even if just for a few breaths.",
-       "And when you’re ready… gently release your hands… knowing that this sense of warmth and care is always within reach.",
-       "You can return to it anytime… like a soft whisper of kindness… reminding you that you are worthy of love and compassion, just as you are."
-   ]
+class HapticManager {
+    private var engine: CHHapticEngine?
+    private var breathPlayer: CHHapticAdvancedPatternPlayer?
+    private var isPlaying = false
+
+    init() {
+        prepareHaptics()
+    }
+
+    func prepareHaptics() {
+        do {
+            engine = try CHHapticEngine()
+            try engine?.start()
+        } catch {
+            print("Haptic Engine Error: \(error.localizedDescription)")
+        }
+    }
+
+    func startBreathingHaptic(intensity: String) {
+        guard let engine = engine, !isPlaying else { return }
+        isPlaying = true
+
+        let intensityValue: Float
+        switch intensity {
+        case "Soft":
+            intensityValue = 0.3
+        case "Medium":
+            intensityValue = 0.6
+        case "Strong":
+            intensityValue = 1.0
+        default:
+            intensityValue = 0.6
+        }
+
+        func playHapticPattern() {
+            do {
+                let pattern = try CHHapticPattern(events: [
+                    // 🌬️ Inspirazione: Vibrazione crescente (4 secondi)
+                    CHHapticEvent(eventType: .hapticContinuous, parameters: [
+                        CHHapticEventParameter(parameterID: .hapticIntensity, value: intensityValue * 0.2),
+                        CHHapticEventParameter(parameterID: .hapticSharpness, value: 0.2)
+                    ], relativeTime: 0, duration: 1), // Inizio leggero
+
+                    CHHapticEvent(eventType: .hapticContinuous, parameters: [
+                        CHHapticEventParameter(parameterID: .hapticIntensity, value: intensityValue * 0.5),
+                        CHHapticEventParameter(parameterID: .hapticSharpness, value: 0.4)
+                    ], relativeTime: 1, duration: 1), // Intensità media
+
+                    CHHapticEvent(eventType: .hapticContinuous, parameters: [
+                        CHHapticEventParameter(parameterID: .hapticIntensity, value: intensityValue),
+                        CHHapticEventParameter(parameterID: .hapticSharpness, value: 0.6)
+                    ], relativeTime: 2, duration: 2), // Apice dell'inspirazione
+
+                    // Pausa breve (1 secondo)
+                    CHHapticEvent(eventType: .hapticTransient, parameters: [
+                        CHHapticEventParameter(parameterID: .hapticIntensity, value: 0.0)
+                    ], relativeTime: 4.2, duration: 0),
+
+                    // 😌 Espirazione: Vibrazione decrescente (6 secondi)
+                    CHHapticEvent(eventType: .hapticContinuous, parameters: [
+                        CHHapticEventParameter(parameterID: .hapticIntensity, value: intensityValue),
+                        CHHapticEventParameter(parameterID: .hapticSharpness, value: 0.6)
+                    ], relativeTime: 5, duration: 2), // Inizio forte
+
+                    CHHapticEvent(eventType: .hapticContinuous, parameters: [
+                        CHHapticEventParameter(parameterID: .hapticIntensity, value: intensityValue * 0.5),
+                        CHHapticEventParameter(parameterID: .hapticSharpness, value: 0.4)
+                    ], relativeTime: 7, duration: 2), // Intensità media
+
+                    CHHapticEvent(eventType: .hapticContinuous, parameters: [
+                        CHHapticEventParameter(parameterID: .hapticIntensity, value: intensityValue * 0.2),
+                        CHHapticEventParameter(parameterID: .hapticSharpness, value: 0.2)
+                    ], relativeTime: 9, duration: 2), // Fine espirazione morbida
+
+                    // Pausa lunga (1 secondo) per un ciclo completo
+                    CHHapticEvent(eventType: .hapticTransient, parameters: [
+                        CHHapticEventParameter(parameterID: .hapticIntensity, value: 0.0)
+                    ], relativeTime: 11.2, duration: 0)
+                ], parameters: [])
+
+                breathPlayer = try engine.makeAdvancedPlayer(with: pattern)
+                try breathPlayer?.start(atTime: 0)
+
+                // Ripete il ciclo ogni 12 secondi
+                DispatchQueue.main.asyncAfter(deadline: .now() + 12) {
+                    if self.isPlaying {
+                        playHapticPattern()
+                    }
+                }
+
+            } catch {
+                print("Failed to create haptic pattern: \(error.localizedDescription)")
+            }
+        }
+
+        playHapticPattern()
+    }
+
+    func stopBreathingHaptic() {
+        isPlaying = false
+        do {
+            try breathPlayer?.stop(atTime: 0)
+        } catch {
+            print("Failed to stop haptic: \(error.localizedDescription)")
+        }
+    }
+}
