@@ -54,6 +54,9 @@ struct IntertwinedCirclesView: View {
                 .multilineTextAlignment(.center)
                 .transition(.opacity)
                 .animation(.easeInOut(duration: 3), value: textIndex)
+                .padding(.bottom, 70)
+                                                .padding(.leading)
+                                                .padding(.trailing)
         }
     }
 }

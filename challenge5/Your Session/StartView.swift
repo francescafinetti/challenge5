@@ -32,7 +32,7 @@ struct StartView: View {
                             .bold()
                             .padding()
                             .frame(maxWidth: .infinity)
-                            .background(Color.blue)
+                            .background(Color.accent1)
                             .foregroundColor(.white)
                             .cornerRadius(12)
                             .shadow(radius: 5)

@@ -31,3 +31,7 @@ struct StaticIntertwinedCirclesView: View {
         }
     }
 }
+
+#Preview {
+    StaticIntertwinedCirclesView()
+}
