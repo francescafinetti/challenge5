@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXFileReference section */
-		F9DA5F632D6C6F4B00E6BFA2 /* Ombrace.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Ombrace.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F9DA5F632D6C6F4B00E6BFA2 /* challenge5.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = challenge5.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -40,7 +40,7 @@
 		F9DA5F642D6C6F4B00E6BFA2 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				F9DA5F632D6C6F4B00E6BFA2 /* Ombrace.app */,
+				F9DA5F632D6C6F4B00E6BFA2 /* challenge5.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -48,9 +48,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		F9DA5F622D6C6F4B00E6BFA2 /* Ombrace */ = {
+		F9DA5F622D6C6F4B00E6BFA2 /* challenge5 */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = F9DA5F732D6C6F4B00E6BFA2 /* Build configuration list for PBXNativeTarget "Ombrace" */;
+			buildConfigurationList = F9DA5F732D6C6F4B00E6BFA2 /* Build configuration list for PBXNativeTarget "challenge5" */;
 			buildPhases = (
 				F9DA5F5F2D6C6F4B00E6BFA2 /* Sources */,
 				F9DA5F602D6C6F4B00E6BFA2 /* Frameworks */,
@@ -63,11 +63,11 @@
 			fileSystemSynchronizedGroups = (
 				F9DA5F652D6C6F4B00E6BFA2 /* challenge5 */,
 			);
-			name = Ombrace;
+			name = challenge5;
 			packageProductDependencies = (
 			);
 			productName = challenge5;
-			productReference = F9DA5F632D6C6F4B00E6BFA2 /* Ombrace.app */;
+			productReference = F9DA5F632D6C6F4B00E6BFA2 /* challenge5.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -99,7 +99,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				F9DA5F622D6C6F4B00E6BFA2 /* Ombrace */,
+				F9DA5F622D6C6F4B00E6BFA2 /* challenge5 */,
 			);
 		};
 /* End PBXProject section */
@@ -314,7 +314,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		F9DA5F732D6C6F4B00E6BFA2 /* Build configuration list for PBXNativeTarget "Ombrace" */ = {
+		F9DA5F732D6C6F4B00E6BFA2 /* Build configuration list for PBXNativeTarget "challenge5" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				F9DA5F742D6C6F4B00E6BFA2 /* Debug */,
