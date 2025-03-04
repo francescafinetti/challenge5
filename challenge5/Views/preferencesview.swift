@@ -10,7 +10,7 @@ struct PreferencesView: View {
 
     @State private var isSoundMenuExpanded: Bool = false
 
-    let soundOptions = ["None", "Forest", "Meditation", "Melody", "Piano", "Rain", "Relaxing", "Sea", "Yoga"]
+    let soundOptions = ["None", "Forest", "Meditation", "Melody", "Piano", "Rain", "Relaxing", "Ocean", "Yoga"]
 
     var body: some View {
         NavigationStack {
