@@ -24,14 +24,13 @@ struct challenge5App: App {
     }()
 
     init() {
-        // Forza il tema scuro per l'intera app
         UIView.appearance().overrideUserInterfaceStyle = .dark
     }
 
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .preferredColorScheme(.dark) // Imposta la modalità scura
+                .preferredColorScheme(.dark)
         }
         .modelContainer(sharedModelContainer)
     }
