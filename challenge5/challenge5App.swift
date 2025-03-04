@@ -22,14 +22,17 @@ struct challenge5App: App {
             fatalError("Could not create ModelContainer: \(error)")
         }
     }()
-    
+
+    init() {
+        // Forza il tema scuro per l'intera app
+        UIView.appearance().overrideUserInterfaceStyle = .dark
+    }
 
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .preferredColorScheme(.dark) // Imposta la modalità scura
         }
         .modelContainer(sharedModelContainer)
     }
 }
-
-
