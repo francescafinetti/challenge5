@@ -22,6 +22,7 @@ struct challenge5App: App {
             fatalError("Could not create ModelContainer: \(error)")
         }
     }()
+    
 
     var body: some Scene {
         WindowGroup {
@@ -30,3 +31,5 @@ struct challenge5App: App {
         .modelContainer(sharedModelContainer)
     }
 }
+
+

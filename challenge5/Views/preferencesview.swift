@@ -11,6 +11,8 @@ struct PreferencesView: View {
     @State private var isSoundMenuExpanded: Bool = false
 
     let soundOptions = ["Default", "Chime", "Beep", "Melody", "Rain", "Waves", "Forest", "Sea"]
+    
+    //c'è solo sea - come wav - si devono scaricare gli altri - questo preso da freesounds
 
     var body: some View {
         NavigationStack {

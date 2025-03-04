@@ -1,3 +1,4 @@
+
 import SwiftUI
 import SwiftData
 
@@ -36,9 +37,11 @@ struct ContentView: View {
                 
                 ScrollView {
                     VStack(spacing: 25) {
-                        CardView(title: "Guided Session", subtitle: "4 MIN", icon: "hand.tap.fill", onMoreTapped: {
-                            isPreferencesPresented.toggle()
-                        })
+                        NavigationLink(destination: GuidedStartView()) {
+                            CardView(title: "Guided Session", subtitle: "4 MIN", icon: "hand.tap.fill", onMoreTapped: {
+                                isPreferencesPresented.toggle()
+                            })
+                        }
                         
                         NavigationLink(destination: StartView()) {
                             CardView(title: "Your Session", subtitle: "-", icon: "hands.sparkles.fill", onMoreTapped: {
@@ -58,7 +61,7 @@ struct ContentView: View {
             .sheet(isPresented: $isPreferencesPresented) {
                 PreferencesView()
             }
-        }
+        } .accentColor(Color.accent1)
     }
     
     private func addItemIfEmpty() {
@@ -81,3 +84,4 @@ struct ContentView: View {
     ContentView()
         .modelContainer(for: Item.self, inMemory: true)
 }
+

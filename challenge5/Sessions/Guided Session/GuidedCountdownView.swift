@@ -1,52 +1,52 @@
 import SwiftUI
 
-struct GuidedSession: View {
+struct GuidedCountdownView: View {
     let selectedPath: String
-    @State private var textIndex = 0
-    @State private var textTimer: Timer?
-
-    var currentTexts: [String] {
-        selectedPath == "Top to Bottom" ? topToBottomTexts : bottomToTopTexts
-    }
+    @State private var countdown = 5
+    @State private var navigateToSession = false
+    @State private var fadeOut = false
 
     var body: some View {
-        VStack {
-            Image("man")
-                .resizable()
-                .scaledToFit()
+        ZStack {
+            Color.black.ignoresSafeArea()
 
-            Text(currentTexts[textIndex])
-                .foregroundColor(.white)
-                .bold()
-                .font(.body)
-                .padding()
-                .frame(maxWidth: .infinity)
-                .multilineTextAlignment(.center)
-                .transition(.opacity)
-                .animation(.easeInOut(duration: 3), value: textIndex)
-                .padding(.bottom, 70)
-                .padding(.horizontal, 20)
+            if !navigateToSession {
+                Text("\(countdown)")
+                    .font(.system(size: 100, weight: .bold))
+                    .foregroundColor(.accent1)
+                    .scaleEffect(fadeOut ? 2 : 1)
+                    .opacity(fadeOut ? 0 : 1)
+                    .transition(.opacity)
+                    .animation(.easeInOut(duration: 1), value: fadeOut)
+            }
 
-            Spacer()
+            if navigateToSession {
+                GuidedSession(selectedPath: selectedPath)
+                    .transition(.opacity)
+            }
         }
-        .background(Color.black.ignoresSafeArea())
         .onAppear {
-            startTextTimer()
-        }
-        .onDisappear {
-            textTimer?.invalidate()
+            startCountdown()
         }
     }
 
-    private func startTextTimer() {
-        textTimer = Timer.scheduledTimer(withTimeInterval: 6, repeats: true) { _ in
-            withAnimation {
-                textIndex = (textIndex + 1) % currentTexts.count
+    private func startCountdown() {
+        Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
+            if countdown > 1 {
+                countdown -= 1
+            } else {
+                timer.invalidate()
+                withAnimation(.easeInOut(duration: 1)) {
+                    fadeOut = true
+                }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    navigateToSession = true
+                }
             }
         }
     }
 }
 
 #Preview {
-    GuidedSession(selectedPath: "Top to Bottom")
+    GuidedCountdownView(selectedPath: "Top to Bottom")
 }

@@ -1,52 +1,61 @@
 import SwiftUI
 
-struct GuidedSession: View {
-    let selectedPath: String
-    @State private var textIndex = 0
-    @State private var textTimer: Timer?
-
-    var currentTexts: [String] {
-        selectedPath == "Top to Bottom" ? topToBottomTexts : bottomToTopTexts
-    }
-
+struct GuidedStartView: View {
+    @State private var selectedPath = "Top to Bottom"
+    @State private var navigateToSession = false
+    
+    
+    
+    let paths = ["Top to Bottom", "Bottom to Top"]
+    
     var body: some View {
-        VStack {
-            Image("man")
-                .resizable()
-                .scaledToFit()
+        NavigationStack {
+            VStack(spacing: 30) {
+                Text("Welcome to Your Guided Session")
+                    .font(.largeTitle)
+                    .bold()
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal)
+                
+                Image("man")
+                    .resizable()
+                    .scaledToFit()
 
-            Text(currentTexts[textIndex])
-                .foregroundColor(.white)
-                .bold()
-                .font(.body)
+                Text("Choose a path and take a deep breath before we begin.")
+                    .font(.headline)
+                    .foregroundColor(.gray)
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal)
+                
+                Picker("Path", selection: $selectedPath) {
+                    ForEach(paths, id: \.self) { path in
+                        Text(path)
+                    }
+                }
+                .pickerStyle(SegmentedPickerStyle())
                 .padding()
-                .frame(maxWidth: .infinity)
-                .multilineTextAlignment(.center)
-                .transition(.opacity)
-                .animation(.easeInOut(duration: 3), value: textIndex)
-                .padding(.bottom, 70)
-                .padding(.horizontal, 20)
 
-            Spacer()
-        }
-        .background(Color.black.ignoresSafeArea())
-        .onAppear {
-            startTextTimer()
-        }
-        .onDisappear {
-            textTimer?.invalidate()
-        }
-    }
+               
+                NavigationLink(destination: GuidedCountdownView(selectedPath: selectedPath), isActive: $navigateToSession) {
+                    Text("Start")
+                        .font(.title2)
+                        .bold()
+                        .padding()
+                        .frame(maxWidth: .infinity)
+                        .background(Color.accent1)
+                        .foregroundColor(.white)
+                        .cornerRadius(12)
+                        .shadow(radius: 5)
+                        .padding(.horizontal, 40)
+                }
 
-    private func startTextTimer() {
-        textTimer = Timer.scheduledTimer(withTimeInterval: 6, repeats: true) { _ in
-            withAnimation {
-                textIndex = (textIndex + 1) % currentTexts.count
+                Spacer()
             }
+            .padding(.top, 100)
         }
     }
 }
 
 #Preview {
-    GuidedSession(selectedPath: "Top to Bottom")
+    GuidedStartView()
 }

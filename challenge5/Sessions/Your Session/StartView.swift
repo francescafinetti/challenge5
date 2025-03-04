@@ -9,8 +9,7 @@ struct StartView: View {
 
     var body: some View {
         NavigationStack {
-            
-                
+       
                 VStack(spacing: 30) {
                     
                     Image("es")
@@ -18,8 +17,8 @@ struct StartView: View {
                         .scaledToFit()
                         .frame(width: 350, height: 350)
                         .padding()
-                    Text("Welcome to Your Session")
-                        .font(.largeTitle)
+                    Text("Welcome to \nYour Session")
+                        .font(.title)
                         .bold()
                         .multilineTextAlignment(.center)
                         .foregroundColor(.white)
