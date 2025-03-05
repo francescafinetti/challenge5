@@ -3,26 +3,20 @@ import SwiftUI
 struct FluidHumanFigureView: View {
     @State private var activeStep = 0
     @State private var glowEffect = false
-    
-    let steps: [(id: Int, position: (x: CGFloat, y: CGFloat), text: String, duration: Double)] = [
-        (0, (0.5, 0.2), "Sfiora delicatamente la tua guancia.", 3.5),
-        (1, (0.5, 0.3), "Porta una mano sul cuore, sentine il calore.", 3.5),
-        (2, (0.5, 0.4), "Appoggia una mano sull’addome e rilassati.", 3.5),
-        (3, (0.35, 0.5), "Posa le mani sulle spalle e respira.", 4.0),
-        (4, (0.5, 0.6), "Incrocia le braccia e abbracciati con dolcezza.", 4.0)
-    ]
+    @State private var dotVisible = true
+    var instructionVM = InstructionViewModel()
     
     var body: some View {
         GeometryReader { geometry in
             ZStack {
                 // Sfondo con gradienti dinamici e effetto nebuloso
                 LinearGradient(
-                    gradient: Gradient(colors: [Color.blue.opacity(0.5), Color.purple.opacity(0.3), Color.black]),
+                    gradient: Gradient(colors: [Color.yellow.opacity(0.5), Color.orange.opacity(0.3), Color.black]),
                     startPoint: .topLeading, endPoint: .bottomTrailing
                 )
                 .edgesIgnoringSafeArea(.all)
                 .overlay(
-                    RadialGradient(gradient: Gradient(colors: [Color.blue.opacity(0.3), Color.clear]),
+                    RadialGradient(gradient: Gradient(colors: [Color.orange.opacity(0.3), Color.clear]),
                                    center: .center, startRadius: 50, endRadius: 400)
                         .blur(radius: 50)
                 )
@@ -30,7 +24,7 @@ struct FluidHumanFigureView: View {
                 // Figura umana stilizzata con effetto respiro
                 HumanOutline()
                     .stroke(Color.white.opacity(0.4), lineWidth: 3)
-                    .frame(width: geometry.size.width * 0.6, height: geometry.size.height * 0.8)
+                    .frame(width: geometry.size.width * 0.9, height: geometry.size.height * 0.9)
                     .position(x: geometry.size.width / 2, y: geometry.size.height / 2)
                     .shadow(color: glowEffect ? .cyan.opacity(0.6) : .clear, radius: glowEffect ? 20 : 5)
                     .animation(.easeInOut(duration: 1.5).repeatForever(autoreverses: true), value: glowEffect)
@@ -39,25 +33,25 @@ struct FluidHumanFigureView: View {
                         advanceStep()
                     }
                 
-                // Punti interattivi per il tocco con effetto pulsante
-                ForEach(steps, id: \.id) { step in
-                    let position = CGPoint(
-                        x: step.position.x * geometry.size.width,
-                        y: step.position.y * geometry.size.height
-                    )
-
-                    Circle()
-                        .fill(activeStep == step.id ? Color.cyan.opacity(1) : Color.white.opacity(0.3))
-                        .frame(width: activeStep == step.id ? 40 : 25, height: activeStep == step.id ? 40 : 25)
-                        .position(position)
-                        .shadow(color: .cyan, radius: activeStep == step.id ? 20 : 8)
-                        .animation(.easeInOut(duration: 0.8).repeatForever(autoreverses: true), value: activeStep)
-                }
+                // Posizione del cerchio in base all'istruzione corrente
+                let position = CGPoint(
+                    x: instructionVM.instructions[activeStep].position.x * geometry.size.width,
+                    y: instructionVM.instructions[activeStep].position.y * geometry.size.height
+                )
+                
+                // Cerchio che appare e scompare in base a activeStep
+                Circle()
+                    .fill(Color.orange.opacity(1))
+                    .frame(width: 40, height: 40)
+                    .position(position)
+                    .opacity(dotVisible ? 1: 0 )
+                    .animation(.easeInOut(duration: 1), value: dotVisible)
+                
 
                 // Istruzioni testuali con effetto dissolvenza
                 VStack {
                     Spacer()
-                    Text(steps[activeStep].text)
+                    Text(instructionVM.instructions[activeStep].text)
                         .font(.title2)
                         .foregroundColor(.white.opacity(0.9))
                         .multilineTextAlignment(.center)
@@ -76,12 +70,19 @@ struct FluidHumanFigureView: View {
     
     // Funzione che fa avanzare automaticamente la sessione
     private func advanceStep() {
-        if activeStep < steps.count - 1 {
-            DispatchQueue.main.asyncAfter(deadline: .now() + steps[activeStep].duration) {
-                withAnimation {
-                    activeStep += 1
-                }
+        if activeStep < instructionVM.instructions.count - 1 {
+            withAnimation (.easeInOut(duration: 1)){
+                dotVisible = false
+                
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + instructionVM.instructions[activeStep].duration) {
+                 activeStep += 1
+                
                 advanceStep()
+            }
+            withAnimation(.easeInOut(duration: 1)) {
+                
+                dotVisible = true
             }
         }
     }
@@ -96,7 +97,7 @@ struct HumanOutline: Shape {
         let height = rect.height
 
         // Testa
-        path.addEllipse(in: CGRect(x: width * 0.42, y: height * 0.05, width: width * 0.16, height: width * 0.16))
+        path.addEllipse(in: CGRect(x: width * 0.40, y: height * 0.10, width: width * 0.20, height: width * 0.20))
         
         // Collo
         path.move(to: CGPoint(x: width * 0.5, y: height * 0.21))
@@ -122,6 +123,7 @@ struct HumanOutline: Shape {
         return path
     }
 }
+
 
 #Preview {
     FluidHumanFigureView()
