@@ -88,7 +88,7 @@ struct IntertwinedCirclesView: View {
 
                     if isCountingDown {
                         Text("\(countdown)")
-                            .font(.system(size: 100, weight: .bold))
+                            .font(.system(size: 1, weight: .bold))
                             .foregroundColor(.accent1)
                             .transition(.opacity)
                             .animation(.easeInOut(duration: 1), value: countdown)

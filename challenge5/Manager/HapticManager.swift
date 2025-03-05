@@ -25,55 +25,58 @@ class HapticManager {
         let intensityValue: Float
         switch intensity {
         case "Soft":
-            intensityValue = 0.2
+            intensityValue = 0.5
         case "Medium":
-            intensityValue = 0.5
-        case "Strong":
             intensityValue = 0.8
+        case "Strong":
+            intensityValue = 1.3
         default:
-            intensityValue = 0.5
+            intensityValue = 0.8
         }
 
         func playHapticPattern() {
             do {
                 let pattern = try CHHapticPattern(events: [
-                    // Inspirazione - Vibrazione fluida, con intensità crescente a onda
-                    CHHapticEvent(eventType: .hapticContinuous, parameters: [
-                        CHHapticEventParameter(parameterID: .hapticIntensity, value: intensityValue * 0.1),
-                        CHHapticEventParameter(parameterID: .hapticSharpness, value: 0.1)
-                    ], relativeTime: 0, duration: 0.5),
-                    CHHapticEvent(eventType: .hapticContinuous, parameters: [
-                        CHHapticEventParameter(parameterID: .hapticIntensity, value: intensityValue * 0.3),
-                        CHHapticEventParameter(parameterID: .hapticSharpness, value: 0.2)
-                    ], relativeTime: 0.5, duration: 0.5),
-                    CHHapticEvent(eventType: .hapticContinuous, parameters: [
-                        CHHapticEventParameter(parameterID: .hapticIntensity, value: intensityValue * 0.5),
-                        CHHapticEventParameter(parameterID: .hapticSharpness, value: 0.3)
-                    ], relativeTime: 1, duration: 0.5),
-                    CHHapticEvent(eventType: .hapticContinuous, parameters: [
-                        CHHapticEventParameter(parameterID: .hapticIntensity, value: intensityValue * 0.7),
-                        CHHapticEventParameter(parameterID: .hapticSharpness, value: 0.4)
-                    ], relativeTime: 1.5, duration: 1),
-                    CHHapticEvent(eventType: .hapticContinuous, parameters: [
-                        CHHapticEventParameter(parameterID: .hapticIntensity, value: intensityValue),
-                        CHHapticEventParameter(parameterID: .hapticSharpness, value: 0.5)
-                    ], relativeTime: 2.5, duration: 1.5),
-
-                    // Espirazione - Piccole vibrazioni rapide e ritmiche (TITITITITI)
+                    // 🔹 Countdown - 5 colpetti singoli prima di iniziare
+                    CHHapticEvent(eventType: .hapticTransient, parameters: [], relativeTime: 0.0),
+                    CHHapticEvent(eventType: .hapticTransient, parameters: [], relativeTime: 0.8),
+                    CHHapticEvent(eventType: .hapticTransient, parameters: [], relativeTime: 1.6),
+                    CHHapticEvent(eventType: .hapticTransient, parameters: [], relativeTime: 2.4),
+                    CHHapticEvent(eventType: .hapticTransient, parameters: [], relativeTime: 3.2),
+                    
+                    // 🔹 Inspirazione (4s) - Pallini "titititi"
+                    CHHapticEvent(eventType: .hapticTransient, parameters: [], relativeTime: 4.0),
+                    CHHapticEvent(eventType: .hapticTransient, parameters: [], relativeTime: 4.2),
+                    CHHapticEvent(eventType: .hapticTransient, parameters: [], relativeTime: 4.4),
+                    CHHapticEvent(eventType: .hapticTransient, parameters: [], relativeTime: 4.6),
+                    CHHapticEvent(eventType: .hapticTransient, parameters: [], relativeTime: 4.8),
+                    CHHapticEvent(eventType: .hapticTransient, parameters: [], relativeTime: 5.0),
                     CHHapticEvent(eventType: .hapticTransient, parameters: [], relativeTime: 5.2),
                     CHHapticEvent(eventType: .hapticTransient, parameters: [], relativeTime: 5.4),
                     CHHapticEvent(eventType: .hapticTransient, parameters: [], relativeTime: 5.6),
                     CHHapticEvent(eventType: .hapticTransient, parameters: [], relativeTime: 5.8),
                     CHHapticEvent(eventType: .hapticTransient, parameters: [], relativeTime: 6.0),
-                    CHHapticEvent(eventType: .hapticTransient, parameters: [], relativeTime: 6.2),
-                    CHHapticEvent(eventType: .hapticTransient, parameters: [], relativeTime: 6.4),
-                    CHHapticEvent(eventType: .hapticTransient, parameters: [], relativeTime: 6.6)
+                    
+                    // 🔹 Pausa (7s) - Nessuna vibrazione
+                    
+                    // 🔹 Espirazione (8s) - Pallini "titititi"
+                    CHHapticEvent(eventType: .hapticTransient, parameters: [], relativeTime: 13.0),
+                    CHHapticEvent(eventType: .hapticTransient, parameters: [], relativeTime: 13.3),
+                    CHHapticEvent(eventType: .hapticTransient, parameters: [], relativeTime: 13.6),
+                    CHHapticEvent(eventType: .hapticTransient, parameters: [], relativeTime: 13.9),
+                    CHHapticEvent(eventType: .hapticTransient, parameters: [], relativeTime: 14.2),
+                    CHHapticEvent(eventType: .hapticTransient, parameters: [], relativeTime: 14.5),
+                    CHHapticEvent(eventType: .hapticTransient, parameters: [], relativeTime: 14.8),
+                    CHHapticEvent(eventType: .hapticTransient, parameters: [], relativeTime: 15.1),
+                    CHHapticEvent(eventType: .hapticTransient, parameters: [], relativeTime: 15.4),
+                    CHHapticEvent(eventType: .hapticTransient, parameters: [], relativeTime: 15.7),
+                    CHHapticEvent(eventType: .hapticTransient, parameters: [], relativeTime: 16.0)
                 ], parameters: [])
 
                 breathPlayer = try engine.makeAdvancedPlayer(with: pattern)
                 try breathPlayer?.start(atTime: 0)
 
-                DispatchQueue.main.asyncAfter(deadline: .now() + 7) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 18) {
                     if self.isPlaying {
                         playHapticPattern()
                     }

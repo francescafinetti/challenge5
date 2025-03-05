@@ -6,17 +6,21 @@ struct StartView: View {
     @AppStorage("selectedVibrationIntensity") private var selectedVibrationIntensity: String = "Medium"
 
     @State private var hapticManager = HapticManager()
+    @State private var isAnimating = false
 
     var body: some View {
         NavigationStack {
        
                 VStack(spacing: 30) {
                     
-                    Image("es")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 350, height: 350)
-                        .padding()
+                    Image("prova")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: isAnimating ? 220 : 250, height: isAnimating ? 220 : 250)
+                                .animation(.easeInOut(duration: 1).repeatForever(autoreverses: true), value: isAnimating)
+                                .onAppear {
+                                    isAnimating = true
+                                } .padding(.top, 150)
                     Text("Welcome to \nYour Session")
                         .font(.title)
                         .bold()
