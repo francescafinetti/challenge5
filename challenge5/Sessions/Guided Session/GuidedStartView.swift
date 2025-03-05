@@ -36,7 +36,7 @@ struct GuidedStartView: View {
                 .padding()
 
                
-                NavigationLink(destination: GuidedCountdownView(selectedPath: selectedPath), isActive: $navigateToSession) {
+                /*NavigationLink(destination: GuidedCountdownView(selectedPath: selectedPath), isActive: $navigateToSession) {
                     Text("Start")
                         .font(.title2)
                         .bold()
@@ -48,7 +48,7 @@ struct GuidedStartView: View {
                         .shadow(radius: 5)
                         .padding(.horizontal, 40)
                 }
-
+*/
                 Spacer()
             }
             .padding(.top, 100)

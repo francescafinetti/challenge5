@@ -1,4 +1,4 @@
-import SwiftUI
+/*import SwiftUI
 
 struct GuidedCountdownView: View {
     let selectedPath: String
@@ -49,4 +49,4 @@ struct GuidedCountdownView: View {
 
 #Preview {
     GuidedCountdownView(selectedPath: "Top to Bottom")
-}
+} */
