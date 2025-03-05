@@ -1,4 +1,5 @@
 import SwiftUI
+import UserNotifications
 
 struct SettingsView: View {
     @Environment(\.presentationMode) var presentationMode
@@ -10,6 +11,14 @@ struct SettingsView: View {
     @State private var showingDatePicker = false
     @State private var showingLanguagePicker = false
     
+    @AppStorage("soundEnabled") private var soundEnabled: Bool = true
+    @AppStorage("selectedSound") private var selectedSound: String = "Default"
+    @AppStorage("vibrationEnabled") private var vibrationEnabled: Bool = true
+    @AppStorage("selectedVibrationIntensity") private var selectedVibrationIntensity: String = "Medium"
+    
+    @State private var isSoundMenuExpanded: Bool = false
+    
+    let soundOptions = ["None", "Forest", "Meditation", "Melody", "Piano", "Rain", "Relaxing", "Ocean", "Yoga"]
     let languages = ["Italiano", "English (USA)", "Français", "Español"]
     
     var body: some View {
@@ -20,12 +29,71 @@ struct SettingsView: View {
                         .cornerRadius(8)
                 }
                 
-                Section {
-                    Toggle(isOn: $notificationsEnabled) {
-                        Text("Notification")
-                        
-                    }                         .tint(Color.accent1)
-
+                Section(header: Text("Sound Settings")) {
+                    Toggle("Sound", isOn: $soundEnabled)
+                        .tint(Color.accent1)
+                    
+                    if soundEnabled {
+                        DisclosureGroup(
+                            isExpanded: $isSoundMenuExpanded,
+                            content: {
+                                ForEach(soundOptions, id: \ .self) { sound in
+                                    HStack {
+                                        Text(sound)
+                                        Spacer()
+                                        if selectedSound == sound {
+                                            Image(systemName: "checkmark")
+                                                .foregroundColor(Color.accent1)
+                                        }
+                                    }
+                                    .contentShape(Rectangle())
+                                    .onTapGesture {
+                                        selectedSound = sound
+                                        SoundManager.shared.playSound(named: sound)
+                                        isSoundMenuExpanded = false
+                                    }
+                                }
+                            },
+                            label: {
+                                HStack {
+                                    Text("Sound Type")
+                                    Spacer()
+                                }
+                                .contentShape(Rectangle())
+                                .onTapGesture {
+                                    withAnimation {
+                                        isSoundMenuExpanded.toggle()
+                                    }
+                                }
+                            }
+                        )
+                    }
+                }
+                
+                Section(header: Text("Vibration Settings")) {
+                    Toggle("Vibration", isOn: $vibrationEnabled)
+                        .tint(Color.accent1)
+                    
+                    if vibrationEnabled {
+                        Picker("Vibration Intensity", selection: $selectedVibrationIntensity) {
+                            ForEach(["Soft", "Medium", "Strong"], id: \ .self) { intensity in
+                                Text(intensity)
+                            }
+                        }
+                        .pickerStyle(SegmentedPickerStyle())
+                    }
+                }
+                
+                Section(header: Text("Notification Settings")) {
+                    Toggle("Notification", isOn: $notificationsEnabled)
+                        .tint(Color.accent1)
+                        .onChange(of: notificationsEnabled) { newValue in
+                            if newValue {
+                                requestNotificationPermission()
+                            } else {
+                                UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
+                            }
+                        }
                     
                     if notificationsEnabled {
                         HStack {
@@ -43,14 +111,19 @@ struct SettingsView: View {
                             DatePicker("Select Time", selection: $notificationTime, displayedComponents: .hourAndMinute)
                                 .datePickerStyle(WheelDatePickerStyle())
                                 .labelsHidden()
+                                .onChange(of: notificationTime) { _ in
+                                    if notificationsEnabled {
+                                        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: ["dailyNotification"])
+                                        scheduleNotification(title: "Hey, \(username)! ⏰", body: "Time for your session!", notificationTime: notificationTime)
+                                    }
+                                }
                         }
                     }
                 }
                 
-                Section {
+                Section(header: Text("Language Settings")) {
                     HStack {
                         Text("Language")
-                        
                         Spacer()
                         Button(action: {
                             showingLanguagePicker.toggle()
@@ -62,7 +135,7 @@ struct SettingsView: View {
                     
                     if showingLanguagePicker {
                         Picker("Select Language", selection: $selectedLanguage) {
-                            ForEach(languages, id: \.self) { language in
+                            ForEach(languages, id: \ .self) { language in
                                 Text(language)
                             }
                         }
@@ -82,10 +155,11 @@ struct SettingsView: View {
                 UserDefaults.standard.set(selectedLanguage, forKey: "selectedLanguage")
                 presentationMode.wrappedValue.dismiss()
             })
-        } .accentColor(Color.accent1)
+        }
+        .accentColor(Color.accent1)
     }
-}
-
+    
+    }
 
 #Preview {
     SettingsView()

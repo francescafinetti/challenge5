@@ -58,9 +58,8 @@ struct ContentView: View {
             .sheet(isPresented: $isSettingsPresented) {
                 SettingsView()
             }
-            .sheet(isPresented: $isPreferencesPresented) {
-                PreferencesView()
-            }
+            
+            
         } .accentColor(Color.accent1)
     }
     
