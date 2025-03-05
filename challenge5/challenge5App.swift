@@ -1,15 +1,11 @@
-//
-//  challenge5App.swift
-//  challenge5
-//
-//  Created by Francesca Finetti on 24/02/25.
-//
-
 import SwiftUI
 import SwiftData
+import UserNotifications
 
 @main
 struct challenge5App: App {
+    @AppStorage("hasSeenOnboarding") private var hasSeenOnboarding: Bool = false
+    
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             Item.self,
@@ -25,13 +21,38 @@ struct challenge5App: App {
 
     init() {
         UIView.appearance().overrideUserInterfaceStyle = .dark
+        setupNotifications()
     }
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
-                .preferredColorScheme(.dark)
+            if hasSeenOnboarding {
+                ContentView()
+            } else {
+                OnboardingView()
+            }
         }
         .modelContainer(sharedModelContainer)
+    }
+
+    func setupNotifications() {
+        let center = UNUserNotificationCenter.current()
+        center.delegate = NotificationDelegate()
+
+        center.requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
+            if let error = error {
+                print("Errore nella richiesta di autorizzazione: \(error.localizedDescription)")
+            } else {
+                print("Autorizzazione concessa: \(granted)")
+            }
+        }
+    }
+}
+
+class NotificationDelegate: NSObject, UNUserNotificationCenterDelegate {
+    func userNotificationCenter(_ center: UNUserNotificationCenter,
+                                willPresent notification: UNNotification,
+                                withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        completionHandler([.banner, .sound]) // Mostra la notifica anche in foreground
     }
 }
